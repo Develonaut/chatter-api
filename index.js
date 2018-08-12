@@ -12,9 +12,9 @@ app.get('/', function(request, response) {
 });
 
 io.on('connection', function(client) {
-  const _message = (process.env.NODE_ENV === 'production') 
-  ? `${client.id} connected to https://chatter-react-server.herokuapp.com/`
-  : `${client.id} connected to http://localhost:5000`;
+  const _message = (process.env.NODE_ENV === 'development')
+  ? `${client.id} connected to http://localhost:5000`
+  : `${client.id} connected to https://chatter-react-server.herokuapp.com/`;
   console.log(_message);
   client.send(_message);
   
