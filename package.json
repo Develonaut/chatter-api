@@ -1,0 +1,25 @@
+{
+  "name": "chatter-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.1.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "description": "The Websocket Server Portion of Chatter",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Develonaut/chatter-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Develonaut/chatter-server/issues"
+  },
+  "homepage": "https://github.com/Develonaut/chatter-server#readme"
+}
