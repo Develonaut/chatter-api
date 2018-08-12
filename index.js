@@ -12,8 +12,12 @@ app.get('/', function(request, response) {
 });
 
 io.on('connection', function(client) {
-  console.log('client connected!');
-  client.send('You proxied to the heroku server!');
+  const _message = (process.env.NODE_ENV === 'production') 
+  ? `${client.id} connected to https://chatter-react-server.herokuapp.com/`
+  : `${client.id} connected to http://localhost:5000`;
+  console.log(_message);
+  client.send(_message);
+  
 
   client.on('join', function(data) {
     console.log(data);
