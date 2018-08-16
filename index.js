@@ -1,27 +1,46 @@
-var path = require('path');
-var express = require('express');
-var app = express();
-var PORT = process.env.PORT || 5000;
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+// Pull .env vars
+require('dotenv').config()
+
+const path = require('path');
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 5000;
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const eventsCapsule = require('./eventCapsule.js');
 
 app.use(express.static(path.join(__dirname, '/')));
 
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + 'index.html')
-});
+io.on(eventsCapsule.CONNECTION, onSocketConnection);
 
-io.on('connection', function(client) {
-  const _message = (process.env.NODE_ENV === 'development')
-  ? `${client.id} connected to http://localhost:5000`
-  : `${client.id} connected to https://chatter-react-server.herokuapp.com/`;
-  client.send(_message);
-  
+function onSocketConnection(socket) {
+  console.log('on socket connection');
+  setEventHandlers.call(socket);
+  emitConnectionMessage.call(socket);
+}
 
-  client.on('join', function(data) {
+function setEventHandlers() {
+  const socket = this;
+  // Client Requests to join Server
+  socket.on(eventsCapsule.JOIN_REQUEST, function(data) {
     console.log(data);
+    // Server allows connection and responds.
+    socket.broadcast.emit(eventsCapsule.JOIN_RESPONSE, `${data.name} joined chat`);
   });
-});
+}
+
+function emitConnectionMessage() {
+  console.log('going to emit');
+  const socket = this;
+  const onConnectionMessage = (process.env.NODE_ENV === 'development')
+  ? `${socket.id} connected to http://localhost:5000`
+  : `${socket.id} connected to https://chatter-react-server.herokuapp.com/`;
+  console.log(eventsCapsule.CONNECTED);
+  socket.emit(eventsCapsule.CONNECTED, {
+    eventsCapsule,
+    message: onConnectionMessage
+  });
+}
 
 server.listen(PORT, function(error) {
   if (error) {
