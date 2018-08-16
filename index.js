@@ -14,7 +14,6 @@ app.use(express.static(path.join(__dirname, '/')));
 io.on(eventsCapsule.CONNECTION, onSocketConnection);
 
 function onSocketConnection(socket) {
-  console.log('on socket connection');
   setEventHandlers.call(socket);
   emitConnectionMessage.call(socket);
 }
@@ -30,12 +29,10 @@ function setEventHandlers() {
 }
 
 function emitConnectionMessage() {
-  console.log('going to emit');
   const socket = this;
   const onConnectionMessage = (process.env.NODE_ENV === 'development')
   ? `${socket.id} connected to http://localhost:5000`
   : `${socket.id} connected to https://chatter-react-server.herokuapp.com/`;
-  console.log(eventsCapsule.CONNECTED);
   socket.emit(eventsCapsule.CONNECTED, {
     eventsCapsule,
     message: onConnectionMessage
